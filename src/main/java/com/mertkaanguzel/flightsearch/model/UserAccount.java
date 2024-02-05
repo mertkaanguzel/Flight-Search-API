@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 @AllArgsConstructor
@@ -24,6 +26,8 @@ public class UserAccount {
 
     @JsonIgnore
     private String password;
+
+    private Role role;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
