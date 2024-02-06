@@ -64,7 +64,7 @@ public class SecurityConfig {
                             .build();
 
             UserAccount admin = UserAccount.builder()
-                    .username("john")
+                    .username("jane")
                     .password(passwordEncoder().encode("doe"))
                     .role(Role.ROLE_ADMIN)
                     .build();
@@ -96,7 +96,7 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService(UserRepository repository) {
         return username -> asUser(repository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found")));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found")));
     }
 
 
@@ -105,6 +105,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(toH2Console()).permitAll()
+                        .requestMatchers(mvc.pattern("/api/auth/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
