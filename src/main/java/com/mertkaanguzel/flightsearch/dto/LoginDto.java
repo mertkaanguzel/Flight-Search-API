@@ -7,5 +7,6 @@ public record LoginDto(
         @NotBlank(message = "Username must not be empty")
         String username,
         @NotBlank(message = "Password must not be empty")
-        String password) {
+        String password
+) {
 }

@@ -41,7 +41,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity()
 public class SecurityConfig {
     private final RsaKeyProperties rsaKeys;
 
@@ -52,6 +52,24 @@ public class SecurityConfig {
     @Bean
     MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
         return new MvcRequestMatcher.Builder(introspector);
+    }
+
+    @Bean
+    SecurityFilterChain configureSecurity(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+        return http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(toH2Console()).permitAll()
+                        .requestMatchers(mvc.pattern("/api/auth/**")).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(httpSecurityHeadersConfigurer -> {
+                    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
+                })
+                .build();
     }
 
     @Bean
@@ -97,25 +115,6 @@ public class SecurityConfig {
     UserDetailsService userDetailsService(UserRepository repository) {
         return username -> asUser(repository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found")));
-    }
-
-
-    @Bean
-    SecurityFilterChain configureSecurity(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
-        return http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(toH2Console()).permitAll()
-                        .requestMatchers(mvc.pattern("/api/auth/**")).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-                .formLogin(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .headers(httpSecurityHeadersConfigurer -> {
-                    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
-                })
-                .build();
     }
 
     @Bean

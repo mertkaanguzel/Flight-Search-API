@@ -61,13 +61,7 @@ public class AuthService {
         UserAccount user = findUserByName(username);
         return new UserDto(user.username(), generateToken(authentication));
     }
-/*
-    public String getToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
-        return token.getToken().getTokenValue();
-    }
-*/
+
     public String generateToken(Authentication authentication) {
         Instant now = getInstant();
 

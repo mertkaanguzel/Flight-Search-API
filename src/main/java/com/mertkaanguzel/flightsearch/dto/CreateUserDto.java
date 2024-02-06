@@ -9,5 +9,6 @@ public record CreateUserDto(
         String username,
         @NotBlank(message = "Password must not be empty")
         @Size(min = 8, message = "Password length must be greater than 8")
-        String password) {
+        String password
+) {
 }
