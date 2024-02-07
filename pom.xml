@@ -68,6 +68,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>flight-search</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

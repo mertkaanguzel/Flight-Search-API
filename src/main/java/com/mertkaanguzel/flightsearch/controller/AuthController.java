@@ -4,6 +4,8 @@ import com.mertkaanguzel.flightsearch.dto.CreateUserDto;
 import com.mertkaanguzel.flightsearch.dto.LoginDto;
 import com.mertkaanguzel.flightsearch.dto.UserDto;
 import com.mertkaanguzel.flightsearch.service.AuthService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,22 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "409", description = "Conflict"),
+    })
     public void register(@Valid @RequestBody CreateUserDto userDto) {
         authService.createUser(userDto);
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+    })
     public ResponseEntity<UserDto> login(@Valid @RequestBody LoginDto userDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDto.username(), userDto.password())

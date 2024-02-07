@@ -12,6 +12,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -60,7 +61,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvc.pattern("/api/auth/**")).permitAll()
-                        .requestMatchers(mvc.pattern("/api/flights/mock")).permitAll()
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/api/flights/mock")).permitAll()
+                        .requestMatchers(mvc.pattern(HttpMethod.GET, "/")).permitAll()
                         .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
                         .requestMatchers(mvc.pattern("/v3/api-docs/**")).permitAll()
                         .anyRequest().authenticated()
