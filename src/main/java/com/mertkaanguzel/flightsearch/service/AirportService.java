@@ -22,7 +22,7 @@ public class AirportService {
 
     public AirportDto createAirport(CreateUpdateAirportDto airportDto) {
         if (airportRepository.findByCity(airportDto.city()).isPresent()) {
-            throw new ResourceAlreadyExistsException("City already exists");
+            throw new ResourceAlreadyExistsException("Airport already exists");
         }
 
         Airport airport = Airport.builder()
@@ -31,7 +31,7 @@ public class AirportService {
 
         airport = airportRepository.saveAndFlush(airport);
 
-        return new AirportDto(String.valueOf(airport.id()), airport.city());
+        return AirportDto.fromAirport(airport);
     }
 
     public Airport findAirportById(String id) {
@@ -39,9 +39,14 @@ public class AirportService {
                 .orElseThrow(() -> new ResourceNotFoundException("Airport not found"));
     }
 
+    public Airport findAirportByCity(String city) {
+        return airportRepository.findByCity(city)
+                .orElseThrow(() -> new ResourceNotFoundException("Airport not found"));
+    }
+
     public AirportDto getAirportById(String id) {
         Airport airport = findAirportById(id);
-        return new AirportDto(String.valueOf(airport.id()), airport.city());
+        return AirportDto.fromAirport(airport);
     }
     public AirportDto updateAirport(String id, CreateUpdateAirportDto airportDto) {
         Airport airport = findAirportById(id);
@@ -49,7 +54,7 @@ public class AirportService {
 
         airport = airportRepository.save(airport);
 
-        return new AirportDto(String.valueOf(airport.id()), airport.city());
+        return AirportDto.fromAirport(airport);
     }
 
     public void deleteAirport(String id) {
