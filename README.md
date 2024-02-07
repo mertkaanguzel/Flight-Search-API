@@ -2,7 +2,7 @@
 
 > ### Amadeus Case Study
 
-This codebase was created to demonstrate a **Flight Search API** built with **Spring Boot** including CRUD operations, authentication, scheduled jobs, entity relations, custom validators, pagination and more.
+This codebase was created to demonstrate a **Flight Search API** built with **Spring Boot** including CRUD operations, authentication, scheduled jobs, custom validators, DTOs, error handlers, entity relations, pagination and more.
 
 ## Getting Started
 
