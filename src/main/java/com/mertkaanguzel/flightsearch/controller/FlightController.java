@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -60,5 +62,13 @@ public class FlightController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFlight(@PathVariable String id) {
         flightService.deleteFlight(id);
+    }
+
+    @GetMapping("/mock")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<FlightDto> getMockFlight() {
+        return ResponseEntity.ok(new FlightDto("", new AirportDto("", "Ankara"),
+                new AirportDto("", "Istanbul"),
+                LocalDate.ofInstant(flightService.getInstant(), ZoneId.systemDefault()), 0L));
     }
 }

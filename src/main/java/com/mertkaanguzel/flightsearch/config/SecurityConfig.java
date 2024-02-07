@@ -60,6 +60,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(toH2Console()).permitAll()
                         .requestMatchers(mvc.pattern("/api/auth/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/api/flights/mock")).permitAll()
+                        .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/v3/api-docs/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

@@ -1,8 +1,6 @@
 package com.mertkaanguzel.flightsearch.service;
 
 import com.mertkaanguzel.flightsearch.config.OffsetBasedPageRequest;
-import com.mertkaanguzel.flightsearch.dto.AirportDto;
-import com.mertkaanguzel.flightsearch.dto.CreateUpdateAirportDto;
 import com.mertkaanguzel.flightsearch.dto.CreateUpdateFlightDto;
 import com.mertkaanguzel.flightsearch.dto.FlightDto;
 import com.mertkaanguzel.flightsearch.exception.ResourceAlreadyExistsException;
@@ -11,23 +9,29 @@ import com.mertkaanguzel.flightsearch.model.Airport;
 import com.mertkaanguzel.flightsearch.model.Flight;
 import com.mertkaanguzel.flightsearch.repository.FlightRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
 public class FlightService {
     private final FlightRepository flightRepository;
     private final AirportService airportService;
+
+    private final RestTemplate restTemplate;
     private final Clock clock;
 
-    public FlightService(FlightRepository flightRepository, AirportService airportService, Clock clock) {
+    public FlightService(FlightRepository flightRepository, AirportService airportService,
+                         RestTemplate restTemplate, Clock clock) {
         this.flightRepository = flightRepository;
         this.airportService = airportService;
+        this.restTemplate = restTemplate;
         this.clock = clock;
     }
     public FlightDto createFlight(CreateUpdateFlightDto flightDto) {
@@ -104,7 +108,24 @@ public class FlightService {
         flightRepository.delete(flight);
     }
 
-    private Instant getInstant() {
+    //job runs at 3 a.m. every day
+    @Scheduled(cron = "0 0 3 * * *"/*fixedDelay = 10000*/)
+    public void ScheduledTask() {
+        FlightDto response = restTemplate.getForObject(
+                "http://localhost:8080/api/flights/mock", FlightDto.class);
+
+        long randomPrice = (long) (Math.random() * 1000);
+
+        CreateUpdateFlightDto flightDto = new CreateUpdateFlightDto(response.originAirport().city(),
+                response.destinationAirport().city(), response.departureDate().toString(),
+                String.valueOf(randomPrice));
+
+        createFlight(flightDto);
+
+        System.out.println("Flight saved to DB");
+    }
+
+    public Instant getInstant() {
         return clock.instant();
     }
 }
