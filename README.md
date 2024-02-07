@@ -8,7 +8,8 @@ scheduled jobs, entity relations, pagination and more.
 
 ## Getting Started
 
->  Coming soon...
+>  * docker build . -t flight-search
+>  * docker run -p 8080:8080 flight-search
 
 ## How it works
 

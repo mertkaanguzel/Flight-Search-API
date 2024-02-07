@@ -1,5 +1,6 @@
 package com.mertkaanguzel.flightsearch.controller;
 
+import com.mertkaanguzel.flightsearch.config.validator.isValidDate;
 import com.mertkaanguzel.flightsearch.dto.AirportDto;
 import com.mertkaanguzel.flightsearch.dto.CreateUpdateAirportDto;
 import com.mertkaanguzel.flightsearch.dto.CreateUpdateFlightDto;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,8 +65,8 @@ public class FlightController {
     })
     public ResponseEntity<List<FlightDto>> getFlights(@RequestParam(value = "origin", required = true) String origin,
                                                       @RequestParam(value = "destination", required = true) String destination,
-                                                      @RequestParam(value = "departureDate", required = true) String departureDate,
-                                                      @RequestParam(value = "returnDate", required = false) String returnDate,
+                                                      @RequestParam(value = "departureDate", required = true) @isValidDate String departureDate,
+                                                      @RequestParam(value = "returnDate", required = false) @isValidDate String returnDate,
                                                       @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
                                                       @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset) {
 

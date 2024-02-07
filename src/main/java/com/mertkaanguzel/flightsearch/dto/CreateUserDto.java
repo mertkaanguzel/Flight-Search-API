@@ -1,7 +1,7 @@
 package com.mertkaanguzel.flightsearch.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 
 public record CreateUserDto(
         @NotBlank(message = "Username must not be empty")

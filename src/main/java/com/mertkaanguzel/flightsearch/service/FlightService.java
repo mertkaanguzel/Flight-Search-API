@@ -1,6 +1,6 @@
 package com.mertkaanguzel.flightsearch.service;
 
-import com.mertkaanguzel.flightsearch.config.OffsetBasedPageRequest;
+import com.mertkaanguzel.flightsearch.config.pagination.OffsetBasedPageRequest;
 import com.mertkaanguzel.flightsearch.dto.CreateUpdateFlightDto;
 import com.mertkaanguzel.flightsearch.dto.FlightDto;
 import com.mertkaanguzel.flightsearch.exception.ResourceAlreadyExistsException;
@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 @Service
